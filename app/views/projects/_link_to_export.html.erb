@@ -1,0 +1,19 @@
+<% if User.current.admin? %>
+  <p class="other-formats" style="margin-right: 20px;">
+    <%= link_to l('link_get_mail_addresses'), '#', :onclick => "showModal('mailing-list-options', '330px'); return false;", :class=> "export_links" %>
+  </p>
+  <div id="mailing-list-options" style="display:none;">
+    <h3 class="title"><%= l('link_get_mail_addresses') %></h3>
+    <% @roles = Role.all %>
+    <%= form_tag(plugin_email_address_exporter_get_mail_addresses_path, :method => :post, :id => 'mailing-export-form', params: params.merge({:format => 'csv', :page=>nil})) do %>
+      <p>
+        <label> <%= l(:label_role_plural) %> : <%= select_tag "role", options_from_collection_for_select(@roles, "id", "name"), multiple: true, id: "mailing_list_export_roles" %></label>
+        <%= hidden_field_tag :visible_projects %>
+      </p>
+      <p class="buttons">
+        <%= submit_tag l(:button_submit), :name => nil, :onclick => "hideModal(this);" %>
+        <%= submit_tag l(:button_cancel), :name => nil, :onclick => "hideModal(this);", :type => 'button' %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
