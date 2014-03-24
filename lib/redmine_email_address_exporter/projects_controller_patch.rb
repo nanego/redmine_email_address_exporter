@@ -9,7 +9,12 @@ class ProjectsController
     retrieve_project_query
     @projects = @query.projects
     remove_hidden_projects
-    send_data query_to_mail_addresses(@projects, params), :type => 'text/csv; header=present', :filename => 'mailing_list.csv'
+    if params['role'].present?
+      filename = "emails-#{Role.find(params['role']).join("-")}.csv"
+    else
+      filename = "emails.csv"
+    end
+    send_data query_to_mail_addresses(@projects, params), :type => 'text/csv; header=present', :filename => filename
   end
 
   def query_to_mail_addresses(projects, options={})
