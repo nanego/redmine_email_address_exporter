@@ -20,21 +20,24 @@ class ProjectsController
   def query_to_mail_addresses(projects, options={})
     encoding = l(:general_csv_encoding)
 
-    export = FCSV.generate(:col_sep => ',') do |csv|
-      # csv lines
-      users = []
-      projects.each do |project|
-        if options['role'].blank?
-          users = users | project.users
-        else
-          roles = Role.find(options['role'].split(','))
-          roles.each do |role|
-            users = users | project.users_by_role[role] if project.users_by_role[role]
-          end
+    all_users = []
+    projects.each do |project|
+      if options['role'].blank?
+        all_users = all_users | project.users
+      else
+        roles = Role.find(options['role'].split(','))
+        roles.each do |role|
+          all_users = all_users | project.users_by_role[role] if project.users_by_role[role]
         end
       end
-      users.sort! { |a,b| a.lastname.downcase <=> b.lastname.downcase }
-      csv << users.collect {|u| Redmine::CodesetUtil.from_utf8(u.mail, encoding) }
+    end
+    all_users.sort! { |a,b| a.lastname.downcase <=> b.lastname.downcase }
+
+    export = FCSV.generate(:col_sep => ',') do |csv|
+      all_users.in_groups_of(50, false).each do |group|  # TODO make it customizable in plugin settings
+        # csv line
+        csv << group.collect {|u| Redmine::CodesetUtil.from_utf8(u.mail, encoding) }
+      end
     end
     export
   end
