@@ -33,6 +33,7 @@ class ProjectsController
           end
         end
       end
+      users.sort! { |a,b| a.lastname.downcase <=> b.lastname.downcase }
       csv << users.collect {|u| Redmine::CodesetUtil.from_utf8(u.mail, encoding) }
     end
     export
