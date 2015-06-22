@@ -5,8 +5,7 @@ Only visible by admins, it allows them to extract member's email addresses per p
 
 ## Dependences
 
-This plugin depends on 4 other plugins:
-  - [redmine_base_select2](https://github.com/jbbarth/redmine_base_select2)
+This plugin depends on 3 other plugins:
   - [redmine_better_crossprojects](https://github.com/jbbarth/redmine_better_crossprojects) (0.2+)
   - [redmine_base_deface](https://github.com/jbbarth/redmine_base_deface)
   - [redmine_base_rspec](https://github.com/jbbarth/redmine_base_rspec)
