@@ -1,15 +1,14 @@
 require "spec_helper"
+require '../../../redmine_better_crossprojects/lib/redmine_better_crossprojects/projects_controller_patch'
 require 'redmine_email_address_exporter/projects_controller_patch'
+
 
 describe ProjectsController, :type => :controller do
   render_views
 
   it "should get_mail_addresses" do
-    # TODO
-  end
-
-  it "should query_to_mail_addresses" do
-    # TODO
+    post :get_mail_addresses, :format => 'csv'
+    expect(response).to be_success
   end
 
   it "should see link to modal on /projects page" do

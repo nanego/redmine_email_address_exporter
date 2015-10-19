@@ -33,13 +33,13 @@ class ProjectsController
     end
     all_users.sort! { |a,b| a.lastname.downcase <=> b.lastname.downcase }
 
-    export = FCSV.generate(:col_sep => ',') do |csv|
+    Redmine::Export::CSV.generate do |csv|
+      # csv lines
       all_users.in_groups_of(50, false).each do |group|  # TODO make it customizable in plugin settings
         # csv line
         csv << group.collect {|u| Redmine::CodesetUtil.from_utf8(u.mail, encoding) }
       end
     end
-    export
   end
 
 end
