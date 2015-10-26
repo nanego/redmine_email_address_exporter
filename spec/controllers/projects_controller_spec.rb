@@ -1,9 +1,11 @@
 require "spec_helper"
-require '../../../redmine_better_crossprojects/lib/redmine_better_crossprojects/projects_controller_patch'
+require 'redmine_better_crossprojects/projects_controller_patch'
 require 'redmine_email_address_exporter/projects_controller_patch'
 
-
 describe ProjectsController, :type => :controller do
+
+  fixtures :users
+  
   render_views
 
   it "should get_mail_addresses" do
