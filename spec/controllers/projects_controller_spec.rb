@@ -10,13 +10,13 @@ describe ProjectsController, :type => :controller do
 
   it "should get_mail_addresses" do
     post :get_mail_addresses, :format => 'csv'
-    expect(response).to be_success
+    expect(response).to be_successful
   end
 
   it "should see link to modal on /projects page" do
     User.current = User.find(1) # admin
     get :index
-    expect(response).to be_success
+    expect(response).to be_successful
     assert_select "a.atom[href='/projects.atom']"
     #TODO: make this test work ; seems deface overrides are not included in test environment (?)
     # assert_select "p.other-formats", :count => 2

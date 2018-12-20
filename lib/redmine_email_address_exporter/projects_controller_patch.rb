@@ -2,8 +2,8 @@ require_dependency 'projects_controller'
 
 class ProjectsController
 
-  skip_before_filter :find_project, :only => [:get_mail_addresses]
-  skip_before_filter :authorize, :only => [:get_mail_addresses]
+  skip_before_action :find_project, :only => [:get_mail_addresses]
+  skip_before_action :authorize, :only => [:get_mail_addresses]
 
   def get_mail_addresses
     retrieve_project_query
