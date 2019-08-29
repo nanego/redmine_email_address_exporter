@@ -14,30 +14,37 @@ class ProjectsController
     else
       filename = "emails.csv"
     end
-    send_data query_to_mail_addresses(@projects, params), :type => 'text/csv; header=present', :filename => filename
+    send_data query_to_mail_addresses(@projects, params), :type => 'text/csv', :filename => filename
   end
 
-  def query_to_mail_addresses(projects, options={})
+  def query_to_mail_addresses(projects, options = {})
     encoding = l(:general_csv_encoding)
 
     all_users = []
     projects.each do |project|
-      if options['role'].blank?
+      if options['role'].blank? && options['function'].blank?
         all_users = all_users | project.users
-      else
+      end
+      if options['role'].present?
         roles = Role.find(options['role'].split(','))
         roles.each do |role|
           all_users = all_users | project.users_by_role[role] if project.users_by_role[role]
         end
       end
+      if options['function'].present?
+        functions = Function.find(options['function'].split(','))
+        functions.each do |function|
+          all_users = all_users | project.users_by_function[function] if project.users_by_function[function]
+        end
+      end
     end
-    all_users.sort! { |a,b| a.lastname.downcase <=> b.lastname.downcase }
+    all_users.sort! {|a, b| a.lastname.downcase <=> b.lastname.downcase}
 
     Redmine::Export::CSV.generate do |csv|
       # csv lines
-      all_users.in_groups_of(50, false).each do |group|  # TODO make it customizable in plugin settings
+      all_users.in_groups_of(50, false).each do |group| # TODO make it customizable in plugin settings
         # csv line
-        csv << group.collect {|u| Redmine::CodesetUtil.from_utf8(u.mail, encoding) }
+        csv << group.collect {|u| Redmine::CodesetUtil.from_utf8(u.mail, encoding)}
       end
     end
   end
